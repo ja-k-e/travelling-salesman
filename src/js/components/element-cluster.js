@@ -1,10 +1,11 @@
 class Cluster {
   constructor({ nodes }) {
     this.nodes = nodes
-    this.getCenter()
+    this.id = `C${id()}`
+    this.setCenter()
   }
 
-  getCenter() {
+  setCenter() {
     let max_x = 0, min_x = Infinity;
     let max_y = 0, min_y = Infinity;
 
