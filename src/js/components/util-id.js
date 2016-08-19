@@ -1,11 +1,11 @@
-function id() {
+function utilId() {
   var date = Date.now()
-  if(date <= id.previous) {
-    date = ++id.previous
+  if(date <= utilId.previous) {
+    date = ++utilId.previous
   } else {
-    id.previous = date
+    utilId.previous = date
   }
   return date
 }
 
-id.previous = 0;
+utilId.previous = 0;

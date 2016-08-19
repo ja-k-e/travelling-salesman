@@ -12,12 +12,15 @@
   */
 
 class Map {
-  constructor({ points, perimeter }) {
+  constructor({ points, perimeter, _debug = false }) {
+    this.debug = _debug
     this.perimeter = perimeter
     this.setGlobals()
     this.setNodes(points)
-    this.setNodesDist()
+    this.setNodesProximities()
     this.sortNodesByDistC()
+    this.connectNodes()
+    if(this.debug) utilDrawMap(this);
   }
 
   // global vars
@@ -46,31 +49,11 @@ class Map {
   }
 
   // for each node, get its distances to each node
-  setNodesDist() {
+  setNodesProximities() {
     let nodes = this.nodes
     // for each node
     this.nodes_keys.forEach(key => {
-      // set initial proximities
-      this.nodes[key].proximities = []
-      // for each node
-      this.nodes_keys.forEach(sib => {
-        // if not same node
-        if(nodes[sib].id !== nodes[key].id) {
-          // get the proximity
-          let proximity = utilProximity({ item1: nodes[key], item2: nodes[sib] })
-          // add the proximity
-          this.nodes[key].proximities.push({
-            id: nodes[sib].id,
-            proximity: proximity
-          })
-        }
-      })
-      // sort proximities by proximity
-      this.nodes[key].proximities.sort((a, b) => {
-        if(a.proximity > b.proximity) return 1;
-        if(a.proximity < b.proximity) return -1;
-        return 0
-      })
+      this.nodes[key].setProximities(this.nodes_keys, this.nodes)
     })
   }
 
@@ -79,9 +62,16 @@ class Map {
     this.nodes_keys.sort((a, b) => {
       let node_a = this.nodes[a]
       let node_b = this.nodes[b]
-      if(node_a.dist_c > node_b.dist_c) return 1;
-      if(node_a.dist_c < node_b.dist_c) return -1;
+      if(node_a.dist_c > node_b.dist_c) return -1;
+      if(node_a.dist_c < node_b.dist_c) return 1;
       return 0
+    })
+  }
+
+  // connect the nodes
+  connectNodes() {
+    this.nodes_keys.forEach(key => {
+      this.nodes[key].connect(this.nodes)
     })
   }
 }

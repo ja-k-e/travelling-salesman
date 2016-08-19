@@ -1,7 +1,7 @@
 class Cluster {
   constructor({ nodes }) {
     this.nodes = nodes
-    this.id = `C${id()}`
+    this.id = `C${utilId()}`
     this.setCenter()
   }
 
